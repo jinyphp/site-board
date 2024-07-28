@@ -21,6 +21,7 @@ class SiteBoardView extends Component
     public $board = [];
 
     public $editable = false;
+    public $deleted = false;
     public $forms = [];
 
 
@@ -65,18 +66,28 @@ class SiteBoardView extends Component
 
     public function render()
     {
+        ## 삭제동작
+        if($this->deleted) {
+            return view("jiny-site-board::site.board.delete",[
+                'message' => "계시물이 삭제되었습니다."
+            ]);
+        }
+
+
+        ## 보기 및 수정
         $row = DB::table($this->tablename)->where('id',$this->_id)->first();
         if($row) {
+            ## 수정모드
             if($this->editable) {
                 $this->forms = [];
                 foreach($row as $key => $value) {
                     $this->forms[$key] = $value;
                 }
 
-                //dd($this->forms);
-
                 return view("jiny-site-board::site.board.edit");
-            } else {
+            }
+            ## 보기모드
+            else {
                 return view($this->viewFile,[
                     'row' => $row
                 ]);
@@ -107,6 +118,12 @@ class SiteBoardView extends Component
 
     public function delete()
     {
-        $this->editable = false;
+        $this->deleted = true;
+
+        DB::table($this->tablename)
+            ->where('id',$this->_id)
+            ->delete();
+
+        $this->dispatch('board-deleted');
     }
 }
