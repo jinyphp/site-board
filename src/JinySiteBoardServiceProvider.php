@@ -25,7 +25,17 @@ class JinySiteBoardServiceProvider extends ServiceProvider
     {
         /* 라이브와이어 컴포넌트 등록 */
         $this->app->afterResolving(BladeCompiler::class, function () {
-            
+            Livewire::component('SiteBoard-create',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardCreate::class);
+
+            Livewire::component('SiteBoard-view',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardView::class);
+
+            Livewire::component('SiteBoard-list',
+                \Jiny\Site\Board\Http\Livewire\BoardList::class);
+
+            Livewire::component('SiteBoard-related',
+                \Jiny\Site\Board\Http\Livewire\BoardRelated::class);
 
         });
     }
