@@ -5,9 +5,16 @@ use Illuminate\Support\Facades\Blade;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
-class BoardList extends Component
+class BoardCate extends Component
 {
-    public $viewFile = "jiny-site-board::site.board_list.live";
+    public $viewFile;
+
+    public function mount()
+    {
+        if(!$this->viewFile) {
+            $this->viewFile = "jiny-site-board::site.board_cate.live";
+        }
+    }
 
     public function render()
     {

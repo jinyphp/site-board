@@ -43,7 +43,12 @@
                         <x-flex-between>
                             <div>
                                 <h5 class="card-title">
-                                    계시판
+                                    <a href="/admin/site/board/code">
+                                        계시판 목록
+                                    </a>
+                                    <x-badge-info>
+                                        {{table_count("site_board")}}
+                                    </x-badge-info>
                                 </h5>
                                 <h6 class="card-subtitle text-muted">
 

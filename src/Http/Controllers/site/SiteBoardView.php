@@ -26,6 +26,7 @@ class SiteBoardView extends SiteController
 
         // 레이아웃을 커스텀 변경합니다.
         $this->actions['view']['detail'] = "jiny-site-board::site.board_code.view";
+        $this->actions['view']['confirm'] = "jiny-site-board::site.board_code.confirm";
     }
 
     public function index(Request $request)
@@ -140,6 +141,41 @@ class SiteBoardView extends SiteController
         return response()->json([
             'forms' => $forms,
             'message' => 'Form submitted successfully!',
+        ]);
+    }
+
+
+    public function confirm(Request $request)
+    {
+        $code = $request->code;
+        $this->actions['code'] = $code;
+
+        $id = $request->id;
+
+
+        // Slug로 코드 변경
+        $board = DB::table('site_board')->where('slug',$code)->first();
+        if($board) {
+            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+        } else {
+            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $board = DB::table('site_board')->where('code',$code)->first();
+        }
+
+        //dd($board);
+
+        ## actions 보드 정보들 추가합니다.
+        $this->actions['board'] = []; //초기화
+        foreach($board as $key => $value) {
+            $this->actions['board'][$key] = $value;
+        }
+
+        $row = DB::table($this->actions['table'])->where('id',$id)->first();
+
+        return view($this->actions['view']['confirm'],[
+            'actions' => $this->actions,
+            'code' => $code,
+            'row' => $row
         ]);
     }
 

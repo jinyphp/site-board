@@ -19,23 +19,40 @@ class JinySiteBoardServiceProvider extends ServiceProvider
         // 데이터베이스
         $this->loadMigrationsFrom(__DIR__.'/../databases/migrations');
 
+
+        Blade::component($this->package.'::components.'.'ajaxFormCreate', 'ajax-form-create');
+        Blade::component($this->package.'::components.'.'ajaxFormEdit', 'ajax-form-edit');
+        Blade::component($this->package.'::components.'.'ajaxFormDelete', 'ajax-form-delete');
+
     }
 
     public function register()
     {
         /* 라이브와이어 컴포넌트 등록 */
         $this->app->afterResolving(BladeCompiler::class, function () {
+            Livewire::component('SiteBoard',
+                \Jiny\Site\Board\Http\Livewire\SiteBoard::class);
+
+            Livewire::component('SiteBoard-table',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardTable::class);
+
             Livewire::component('SiteBoard-create',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardCreate::class);
 
             Livewire::component('SiteBoard-view',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardView::class);
 
-            Livewire::component('SiteBoard-list',
-                \Jiny\Site\Board\Http\Livewire\BoardList::class);
 
+            Livewire::component('SiteBoard-cate',
+                \Jiny\Site\Board\Http\Livewire\BoardCate::class);
+            Livewire::component('SiteBoard-list',
+                \Jiny\Site\Board\Http\Livewire\BoardCate::class);
+
+            ## 연관 계시글
             Livewire::component('SiteBoard-related',
                 \Jiny\Site\Board\Http\Livewire\BoardRelated::class);
+            Livewire::component('SiteBoard-trend',
+                \Jiny\Site\Board\Http\Livewire\BoardTrend::class);
 
         });
     }

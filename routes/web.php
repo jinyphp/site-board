@@ -31,10 +31,13 @@ Route::middleware(['web'])->group(function(){
         "update"])->where('id', '[0-9]+');
 
     // 리소스 삭제
+    Route::get('board/{code}/{id}/delete', [
+        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
+        "confirm"])->where('id', '[0-9]+');
     Route::delete('board/{code}/{id}', [
         \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
         "destroy"])->where('id', '[0-9]+');
-    Route::delete('board/{code}/{id}/edit', [
+    Route::delete('board/{code}/{id}/delete', [
         \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
             "destroy"])->where('id', '[0-9]+');
 
@@ -65,6 +68,14 @@ if(function_exists('admin_prefix')) {
         ## 계시판 글
         Route::get('board/hash/{code}', [
             \Jiny\Site\Board\Http\Controllers\Admin\AdminBoardCode::class,
+            "index"]);
+
+        Route::get('board/related', [
+            \Jiny\Site\Board\Http\Controllers\Admin\AdminBoardRelated::class,
+            "index"]);
+
+        Route::get('board/trend', [
+            \Jiny\Site\Board\Http\Controllers\Admin\AdminBoardTrend::class,
             "index"]);
 
 

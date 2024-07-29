@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Request;
 
 use Livewire\WithFileUploads;
 
-class SiteBoardView
- extends Component
+class SiteBoardTable extends Component
 {
     use WithFileUploads;
     use WithPagination;
@@ -50,8 +49,6 @@ class SiteBoardView
     public $code;
     public $board = [];
 
-    public $countable; // 카운트 중복 방지
-
     public function mount()
     {
         // admin 접속경로 prefix
@@ -64,20 +61,24 @@ class SiteBoardView
         // 권환체크
         $this->permitCheck();
 
-
-        $current_url = Request::url();
-        $urls = array_reverse(explode('/',$current_url));
-
-        // uri에서 계시물 번호 추출
-        if(isset($urls[0]) && is_numeric($urls[0])) {
-            $id = $urls[0];
-            $this->_id = $urls[0];
+        // 페이징 단위
+        // 외부 설정값이 있는 경우, 초기화
+        if(isset($this->actions['paging'])) {
+            $this->paging = $this->actions['paging'];
         }
 
-        // 계시판 코드 추출
-        if(isset($urls[1]) && is_string($urls[1])) {
-            $code = $urls[1];
-            $this->code = $urls[1];
+        // 인자로 code가 없는 경우, uri를 분석
+        if(!$this->code) {
+            $current_url = Request::url();
+            $urls = array_reverse(explode('/',$current_url));
+
+            // 계시판 코드 추출
+            if(isset($urls[0]) && is_string($urls[0])) {
+                $code = $urls[0];
+                $this->code = $urls[0];
+            }
+        } else {
+            $code = $this->code;
         }
 
         // 계시판 Slug로 코드 변경
@@ -100,6 +101,14 @@ class SiteBoardView
     public function render()
     {
         ## 모드별로 동작화면을 달리 처리합니다.
+        if($this->mode == "create") {
+            $this->setViewCreate();
+            return view($this->viewCreateFile);
+        } else
+        if($this->mode == "view") {
+            $this->setViewView();
+            return view($this->viewViewFile);
+        } else
         if($this->mode == "edit") {
             $this->setViewEdit();
             return view($this->viewEditFile);
@@ -109,26 +118,45 @@ class SiteBoardView
             return view($this->viewDeleteFile);
         }
 
-        // 계시물 조회수를 증가합니다.
-        if($this->countable != $this->_id) {
-            DB::table($this->tablename)
-                ->where('id',$this->_id)
-                ->increment('click');
-
-            $this->countable = $this->_id;
-            // note: 계시물을 서로 엇갈려서 클릭하면, 갯수가 증가됨.
-        }
-
-        $this->setViewView();
-        if($this->view($this->_id)) {
-            return view($this->viewViewFile);
-        }
-
-        return view("jiny-site-board::site.board_wire.error",[
-            'message' => "존재하지 않는 계시물 입니다."
-        ]);
+        ## 계시판 목록을 출력합니다.
+        $this->setViewTable();
+        return $this->table();
     }
 
+
+    public function setViewList()
+    {
+        if(!$this->viewListFile) {
+            if(isset($this->actions['view']['list'])) {
+                $this->viewListFile = $this->actions['view']['list'];
+            }
+            $this->viewListFile = "jiny-site-board"."::site.board_wire.list_link";
+        }
+    }
+
+    public function setViewTable()
+    {
+        $this->setViewList();
+
+        if(!$this->viewTableFile) {
+            if(isset($this->actions['view']['table'])) {
+                $this->viewTableFile = $this->actions['view']['table'];
+            }
+            $this->viewTableFile = "jiny-site-board"."::site.board_wire.table_link";
+        }
+    }
+
+    public function setViewCreate()
+    {
+        $this->setViewForm();
+
+        if(!$this->viewCreateFile) {
+            if(isset($this->actions['view']['create'])) {
+                $this->viewCreateFile = $this->actions['view']['create'];
+            }
+            $this->viewCreateFile = "jiny-site-board"."::site.board_wire.create";
+        }
+    }
 
     public function setViewView()
     {
@@ -174,7 +202,58 @@ class SiteBoardView
 
 
 
+    private function table()
+    {
+        $this->setTable($this->actions['table']);
 
+        // 2. 후킹_before :: 컨트롤러 메서드 호출
+        // DB 데이터를 조회하는 방법들을 변경하려고 할때 유용합니다.
+        if ($controller = $this->isHook("HookIndexing")) {
+            $result = $this->controller->hookIndexing($this);
+            if($result) {
+                // 반환값이 있는 경우, 출력하고 이후동작을 중단함.
+                return view("jiny-wire-table::errors.message",[
+                    'message' => $result
+                ]);
+            }
+        }
+
+
+        // 3. DB에서 데이터를 읽어 옵니다.
+        $rows = $this->dataFetch($this->actions);
+        //$rows = DB::table($this->actions['table'])->get();
+        //$rows = DB::table($this->actions['table'])->paginate($this->paging);
+        //dump($rows);
+        $totalPages = $rows->lastPage();
+        $currentPage = $rows->currentPage();
+
+
+        // 4. 후킹_after :: 읽어온 데이터를 별도로
+        // 추가 조작이 필요한 경우 동작 합니다. (단, 데이터 읽기가 성공한 경우)
+        if($rows) {
+            if ($controller = $this->isHook("HookIndexed")) {
+                $rows = $this->controller->hookIndexed($this, $rows);
+                if(is_array($rows) || is_object($rows)) {
+                    // 반환되는 Hook 값은, 배열 또는 객체값 이어야 합니다.
+                    // 만일 오류를 발생하고자 한다면, 다른 문자열 값을 출력합니다.
+                } else {
+                    return view("jiny-wire-table::error.message",[
+                        'message'=>"HookIndexed() 호출 반환값이 없습니다."
+                    ]);
+                }
+            }
+        }
+
+        $this->toData($rows); // rows를 data 배열에 복사해 둡니다.
+
+        // 6. 출력 레이아아웃
+
+        return view($this->viewTableFile,[
+            'rows'=>$rows,
+            'totalPages'=>$totalPages,
+            'currentPage'=>$currentPage
+        ]);
+    }
 
     private function toData($rows)
     {
@@ -200,9 +279,41 @@ class SiteBoardView
 
 
 
+
+    /**
+     * Create Read Update Delete
+     */
+    /* ----- ----- ----- ----- ----- */
+
+    protected $listeners = ['refeshTable'];
+    public function refeshTable()
+    {
+        // 페이지를 재갱신 합니다.
+    }
+
+    /**
+     * 팝업창 관리
+     */
+    //public $popupForm = false;
+    //public $popupDelete = false;
     public $confirm = false;
     public $forms=[];
+    //public $old=[];
     public $forms_old=[];
+
+    /*
+    public function popupFormOpen()
+    {
+        $this->popupForm = true;
+        $this->confirm = false;
+    }
+
+    public function popupFormClose()
+    {
+        $this->popupForm = false;
+        $this->confirm = false;
+    }
+        */
 
 
 
@@ -231,7 +342,105 @@ class SiteBoardView
     }
 
 
+    public function create($value=null)
+    {
+        $this->message = null;
 
+        // 신규 삽입을 위한 데이터 초기화
+        $this->formInitField();
+
+        // 삽입 권한이 있는지 확인
+        if($this->permit['create']) {
+            unset($this->actions['id']);
+
+            // 후킹:: 컨트롤러 메서드 호출
+            if ($controller = $this->isHook("hookCreating")) {
+                $form = $this->controller->hookCreating($this, $value);
+                if($form) {
+                    $this->forms = $form;
+                }
+            }
+
+            // 폼입력 팝업창 활성화
+            //$this->popupFormOpen();
+            $this->created = true;
+            $this->mode = "create";
+
+        } else {
+            // 권한 없음 팝업을 활성화 합니다.
+            //dd("create 권환이 없습니다.");
+            $this->popupPermitOpen();
+        }
+    }
+
+    public $last_id;
+    public function store()
+    {
+        $this->message = null;
+
+        if($this->permit['create']) {
+
+            // 1.유효성 검사
+            if (isset($this->actions['validate'])) {
+                $validator = Validator::make($this->forms, $this->actions['validate'])->validate();
+            }
+
+            // 2. 시간정보 생성
+            $this->forms['created_at'] = date("Y-m-d H:i:s");
+            $this->forms['updated_at'] = date("Y-m-d H:i:s");
+
+            // 3. 파일 업로드 체크 Trait
+            $this->fileUpload();
+
+
+            // 4. 컨트롤러 메서드 호출
+            // 신규 데이터 DB 삽입전에 호출되는 Hook
+            if ($controller = $this->isHook("hookStoring")) {
+                $_form = $this->controller->hookStoring($this, $this->forms);
+                if(is_array($_form)) {
+                    $form = $_form;
+                } else {
+                    // 훅 처리시 오류가 발생됨.
+                    // $this->message = $_form;
+                    return null;
+                }
+            } else {
+                $form = $this->forms;
+            }
+
+            // 5. 데이터 삽입
+            if($form) {
+                //dd($form);
+                $id = DB::table($this->actions['table'])->insertGetId($form);
+                $form['id'] = $id;
+                $this->last_id = $id;
+
+                // 6. 컨트롤러 메서드 호출
+                if ($controller = $this->isHook("hookStored")) {
+                    $controller->hookStored($this, $form);
+                }
+            }
+
+            // 입력데이터 초기화
+            $this->cancel();
+
+            // 팝업창 닫기
+            //$this->popupFormClose();
+            $this->created = false;
+            $this->mode = null;
+
+            // Livewire Table을 갱신을 호출합니다.
+            // $this->emit('refeshTable');
+
+        } else {
+            $this->popupPermitOpen();
+        }
+    }
+
+    public function createCancel()
+    {
+        $this->mode = null;
+    }
 
     ## 계시물 보기
     public function view($id)
@@ -240,13 +449,7 @@ class SiteBoardView
 
         $row = DB::table($this->actions['table'])
             ->find($id);
-
-        if($row) {
-            $this->setForm($row);
-            return true;
-        }
-
-        return false;
+        $this->setForm($row);
     }
 
 
@@ -465,14 +668,6 @@ class SiteBoardView
             //$this->popupDelete = false;
             // 삭제한 후에는, 테이블 모드로 이동합니다.
             $this->mode = null;
-
-            // 계시물 추가 갯수를 감소합니다.
-            DB::table('site_board')
-                ->where('code',$this->board['code'] )
-                ->decrement('post');
-
-            // 뒤로가기 javascript 이벤트 호출
-            $this->dispatch('board-deleted');
 
         } else {
             //$this->popupFormClose();

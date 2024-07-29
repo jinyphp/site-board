@@ -12,7 +12,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 use Jiny\WireTable\Http\Controllers\WireTablePopupForms;
-class AdminBoard extends WireTablePopupForms
+class AdminBoardRelated extends WireTablePopupForms
 {
     public function __construct()
     {
@@ -20,13 +20,13 @@ class AdminBoard extends WireTablePopupForms
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board";
+        $this->actions['table'] = "site_board_related";
 
-        $this->actions['view']['list'] = "jiny-site-board::admin.board.list";
-        $this->actions['view']['form'] = "jiny-site-board::admin.board.form";
+        $this->actions['view']['list'] = "jiny-site-board::admin.board_related.list";
+        $this->actions['view']['form'] = "jiny-site-board::admin.board_related.form";
 
-        $this->actions['title'] = "계시판";
-        $this->actions['subtitle'] = "복수의 계시판을 관리합니다.";
+        $this->actions['title'] = "관련글";
+        $this->actions['subtitle'] = "계시물과 연관된 관련글을 관리합니다.";
     }
 
 
@@ -35,6 +35,7 @@ class AdminBoard extends WireTablePopupForms
     {
         // 타이틀명 hash코드를 기반으로
         // 신규 테이블을 생성합니다.
+        /*
         if(isset($form['title']) && $form['title']) {
             $code = md5($form['title'].date("Y-m-d_H:i:s"));
             $code = substr($code,0,7);
@@ -43,45 +44,12 @@ class AdminBoard extends WireTablePopupForms
             // 테이블을 생성합니다.
             $this->schemaCreate("site_board_".$code);
         }
+            */
 
         return $form; // 사전 처리한 데이터를 반환합니다.
     }
 
 
-
-    private function schemaCreate($schema)
-    {
-        Schema::create($schema, function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-
-            // 분류코드
-            $table->string('code')->nullable();
-            $table->string('slug')->nullable();
-
-            // 작성자 정보
-            $table->string('name')->nullable();
-            $table->string('email')->nullable();
-            $table->string('password')->nullable(); // 비회원일 경우 비밀번호 필요
-
-            // post 정보
-            $table->string('categories')->nullable();
-            $table->string('keyword')->nullable();
-            $table->string('tags')->nullable();
-
-            // 제목내용
-            $table->string('title')->nullable();
-            $table->text('content')->nullable();
-
-            // post 대표 이미지
-            $table->string('image')->nullable();
-
-
-            $table->unsignedBigInteger('click')->default(0); // 조회수
-            $table->unsignedBigInteger('like')->default(0); //좋아요
-            $table->unsignedBigInteger('rank')->default(0); //랭크
-        });
-    }
 
 
 
@@ -99,7 +67,7 @@ class AdminBoard extends WireTablePopupForms
     ## delete 동직이 실행된후 호출됩니다.
     public function hookDeleted($wire, $row)
     {
-        Schema::dropIfExists("site_board_".$row['code']);
+        //Schema::dropIfExists("site_board_".$row['code']);
         return $row;
     }
 
@@ -109,7 +77,7 @@ class AdminBoard extends WireTablePopupForms
         $rows = DB::table($this->actions['table'])->whereIn('id',$selected)->get();
         //dd($rows);
         foreach($rows as $item) {
-            Schema::dropIfExists("site_board_".$item->code);
+            //Schema::dropIfExists("site_board_".$item->code);
         }
 
     }

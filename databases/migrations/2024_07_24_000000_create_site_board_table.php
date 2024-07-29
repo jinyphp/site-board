@@ -14,9 +14,10 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
+            ## 활성화
             $table->string('enable')->nullable();
 
-            // 분류코드
+            ## 분류코드
             $table->string('code')->nullable();
             $table->string('slug')->nullable(); // url 임시코드
 
@@ -41,9 +42,18 @@ return new class extends Migration
             $table->string('view_edit')->nullable();
             $table->string('view_form')->nullable();
 
+            ## 권환
+            $table->string('permit_read')->nullable();
+            $table->string('permit_create')->nullable();
+            $table->string('permit_edit')->nullable();
+            $table->string('permit_delete')->nullable();
 
 
+            ## 관리자
             $table->string('manager')->nullable();
+
+            ## 글갯수
+            $table->unsignedBigInteger('post')->default(0);
 
         });
     }

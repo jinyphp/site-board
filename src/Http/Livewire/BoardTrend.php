@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Blade;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
-class BoardRelated extends Component
+class BoardTrend extends Component
 {
     public $viewFile;
     public $code;
@@ -14,7 +14,7 @@ class BoardRelated extends Component
     public function mount()
     {
         if(!$this->viewFile) {
-            $this->viewFile = "jiny-site-board::site.board_related.live";
+            $this->viewFile = "jiny-site-board::site.board_trend.live";
         }
     }
 
@@ -22,7 +22,7 @@ class BoardRelated extends Component
     {
         $rows = [];
         if($this->code) {
-            $db = DB::table('site_board_related')
+            $db = DB::table('site_board_trend')
                 ->where('code', $this->code);
 
             if($this->post_id) {

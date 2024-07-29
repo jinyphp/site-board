@@ -10,7 +10,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('site_board_temp', function (Blueprint $table) {
+        Schema::create('site_board_table', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
@@ -47,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('site_board_temp');
+        Schema::dropIfExists('site_board_table');
     }
 };
