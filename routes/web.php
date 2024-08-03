@@ -2,9 +2,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-
 /**
- * 사이트 접속
+ * Board Route
  */
 Route::middleware(['web'])->group(function(){
     Route::get('board/{code}', [
@@ -44,6 +43,39 @@ Route::middleware(['web'])->group(function(){
 });
 
 
+/**
+ * Post Route
+ */
+Route::middleware(['web'])
+    ->name('post')
+    ->prefix("/post")->group(function () {
+        // 포스트 목록
+        Route::get('/', [
+            \Jiny\Site\Board\Http\Controllers\Site\SitePostTable::class,
+            "index"]);
+
+        // 포스트 작성
+        Route::get('/create', [
+            \Jiny\Site\Board\Http\Controllers\Site\SitePostCreate::class,
+            "index"]);
+        Route::post('/create', [
+            \Jiny\Site\Board\Http\Controllers\Site\SitePostCreate::class,
+            "store"]);
+
+        /*
+        // 포스트 목록을 출력
+        Route::get('/', [
+            \Jiny\Site\Board\Http\Controllers\Site\SitePostController::class,
+            "index"])->middleware(['web']);
+        */
+
+        // 포스트 상세 보기
+        Route::get('/{id}', [
+            \Jiny\Site\Board\Http\Controllers\Site\SitePostView::class,
+            "index"])
+            ->where('id', '[0-9]+')
+            ->middleware(['web']);
+ });
 
 
 /**
@@ -76,6 +108,12 @@ if(function_exists('admin_prefix')) {
 
         Route::get('board/trend', [
             \Jiny\Site\Board\Http\Controllers\Admin\AdminBoardTrend::class,
+            "index"]);
+
+
+        //
+        Route::get('/posts', [
+            \Jiny\Site\Board\Http\Controllers\Admin\AdminPost::class,
             "index"]);
 
 

@@ -54,6 +54,16 @@ class JinySiteBoardServiceProvider extends ServiceProvider
             Livewire::component('SiteBoard-trend',
                 \Jiny\Site\Board\Http\Livewire\BoardTrend::class);
 
+            ## Post
+            Livewire::component('SitePost-list',
+                \Jiny\Site\Board\Http\Livewire\SitePostList::class);
+
+            Livewire::component('SitePost-create',
+                \Jiny\Site\Board\Http\Livewire\SitePostCreate::class);
+
+            Livewire::component('SitePost-view',
+                \Jiny\Site\Board\Http\Livewire\SitePostView::class);
+
         });
     }
 }
