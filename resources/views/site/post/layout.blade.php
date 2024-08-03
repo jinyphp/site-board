@@ -22,19 +22,7 @@
 
     {{-- @partials('video_reviews') --}}
 
-    <section class="container pb-5 mb-1 mb-sm-3 mb-lg-4 mb-xl-5">
-        @livewire('setActionRule', [
-            'actions'=>$actions
-        ])
-        <script>
-            document.addEventListener('livewire:init', () => {
-                Livewire.on('refeshTable', (event) => {
-                    console.log("refeshTable");
-                    window.location.reload();
-                });
-            });
-        </script>
-    </section>
+
 
 
 </x-www-layout>
