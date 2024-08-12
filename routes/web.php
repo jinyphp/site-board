@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
  * Board Route
  */
 Route::middleware(['web'])->group(function(){
-    Route::get('board/{code}', [
+    Route::get('board/{code?}', [
         \Jiny\Site\Board\Http\Controllers\Site\SiteBoardTable::class,
         "index"]);
 

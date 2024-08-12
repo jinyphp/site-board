@@ -39,6 +39,11 @@ class SiteBoardTable extends WireTablePopupForms
     {
         $code = $request->code;
         $this->actions['code'] = $code;
+        if(!$code) {
+            return view("jiny-site-board::error",[
+                'message' => "지정한 계시판이 존재하지 않습니다."
+            ]);
+        }
 
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
@@ -51,24 +56,33 @@ class SiteBoardTable extends WireTablePopupForms
 
         ## actions 보드 정보들 추가합니다.
         $this->actions['board'] = []; //초기화
-        foreach($board as $key => $value) {
-            $this->actions['board'][$key] = $value;
+        if($board) {
+            foreach($board as $key => $value) {
+                $this->actions['board'][$key] = $value;
+            }
+
+            // 계시판 지정 레이아웃
+            if($board->view_layout) {
+                $this->actions['view']['layout'] = $board->view_layout;
+            }
+
+            // 계시판 지정 테이블
+            if($board->view_table) {
+                $this->actions['view']['table'] = $board->view_table;
+            }
+
+            // 계시판 지정 리스트(테이블)
+            if($board->view_list) {
+                $this->actions['view']['list'] = $board->view_list;
+            }
+
+        } else {
+            // 계시판이 존재하지 않습니다.
+            $this->actions['view']['layout'] = "jiny-site-board::error";
         }
 
-        // 계시판 지정 레이아웃
-        if($board->view_layout) {
-            $this->actions['view']['layout'] = $board->view_layout;
-        }
 
-        // 계시판 지정 테이블
-        if($board->view_table) {
-            $this->actions['view']['table'] = $board->view_table;
-        }
 
-        // 계시판 지정 리스트(테이블)
-        if($board->view_list) {
-            $this->actions['view']['list'] = $board->view_list;
-        }
 
         return parent::index($request);
     }
