@@ -30,16 +30,24 @@ class JinySiteBoardServiceProvider extends ServiceProvider
     {
         /* 라이브와이어 컴포넌트 등록 */
         $this->app->afterResolving(BladeCompiler::class, function () {
-            Livewire::component('SiteBoard',
-                \Jiny\Site\Board\Http\Livewire\SiteBoard::class);
+            Livewire::component('site-board-setting',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardSetting::class);
 
+            // 계시판 방법1. Site Board popup with Livewire
+            Livewire::component('site-widget-board',
+                \Jiny\Site\Board\Http\Livewire\WidgetBoard::class);
+            Livewire::component('site-board-flip',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardFlip::class);
+
+
+            // 계시판 방법2. Livewire and Ajax
             Livewire::component('SiteBoard-table',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardTable::class);
 
             Livewire::component('SiteBoard-create',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardCreate::class);
 
-            Livewire::component('SiteBoard-view',
+            Livewire::component('site-board-view',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardView::class);
 
 
@@ -48,11 +56,13 @@ class JinySiteBoardServiceProvider extends ServiceProvider
             Livewire::component('SiteBoard-list',
                 \Jiny\Site\Board\Http\Livewire\BoardCate::class);
 
+
             ## 연관 계시글
             Livewire::component('SiteBoard-related',
                 \Jiny\Site\Board\Http\Livewire\BoardRelated::class);
             Livewire::component('SiteBoard-trend',
                 \Jiny\Site\Board\Http\Livewire\BoardTrend::class);
+
 
             ## Post
             Livewire::component('SitePost-list',

@@ -12,10 +12,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * 계시판의 목록을 출력합니다.
+ * Livewire를 이용한 싱글 popup
  */
 use Jiny\WireTable\Http\Controllers\WireTablePopupForms;
-class SiteBoardTable extends WireTablePopupForms
+class SiteBoardPopup extends WireTablePopupForms
 {
     public $code;
 
@@ -34,7 +34,7 @@ class SiteBoardTable extends WireTablePopupForms
         $this->actions['subtitle'] = "작성된 계시글을 관리합니다.";
 
         // 레이아웃을 커스텀 변경합니다.
-        $this->actions['view']['layout'] = "jiny-site-board::site.board_code.layout";
+        $this->actions['view']['layout'] = "jiny-site-board::site.board2.layout";
 
         // 테이블을 커스텀 변경합니다.
         $this->actions['view']['table'] = "jiny-site-board::site.board_code.table";
@@ -73,7 +73,7 @@ class SiteBoardTable extends WireTablePopupForms
         }
 
         if(!$this->code) {
-            return view("jiny-site-board::error",[
+            return view("jiny-site-board::site.board2.error",[
                 'message' => "지정한 계시판이 존재하지 않습니다."
             ]);
         }

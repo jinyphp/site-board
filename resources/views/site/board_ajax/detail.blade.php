@@ -25,7 +25,7 @@
               <div class="col-lg-8 position-relative z-2">
 
                   {{-- 계시판 글 보기 --}}
-                  @livewire("SiteBoard-view",[
+                  @livewire("site-board-view",[
                     'actions' => $actions,
                     'viewFile'=>"www::shop_fashion-v1.board.detail_view2"
                   ])
@@ -40,7 +40,7 @@
                   </script>
 
                   <!-- Subscription CTA -->
-                  @livewire('SiteSubscription')
+                  @livewire('site-subscription')
 
 
                   <!-- Related articles -->

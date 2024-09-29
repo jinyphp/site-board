@@ -1,44 +1,23 @@
 <div>
     <x-loading-indicator/>
 
-    @if($design)
+    {{-- @if($design)
     계시판 선택
-    {!! xSelect()
-        ->table('site_board','title')
-        ->setWire('model.defer',"forms.board")
-        ->setWidth("medium")
-    !!}
+
     <button class="btn btn-primary" wire:click="applyBoard()">선택</button>
 
-    @endif
+    @endif --}}
 
 
     {{-- 계시판 상단--}}
-    @if($board['header'])
+    {{-- @if($board['header'])
     <div>
         {!! $board['header'] !!}
     </div>
-    @endif
+    @endif --}}
 
 
-    <div class="d-flex justify-content-between">
-        <div></div>
-        <div>
-            {{-- 위젯 설정버튼 --}}
-            @if($design)
-            {{-- <button class="btn btn-success" wire:click="header()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg>
-            </button> --}}
-            @endif
 
-            <button class="btn btn-primary" wire:click="create()">
-                작성
-            </button>
-        </div>
-    </div>
 
     {{-- 외부에서 지정한 목록 테이블을 출력합니다. --}}
     @if($viewListFile)
@@ -94,6 +73,25 @@
             </button>
             @endif
             --}}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <div>
+            {{-- 위젯 설정버튼 --}}
+            @if($design)
+            {{-- <button class="btn btn-success" wire:click="header()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+            </button> --}}
+            @endif
+
+            <button class="btn btn-primary" wire:click="create()">
+                작성
+            </button>
         </div>
     </div>
 

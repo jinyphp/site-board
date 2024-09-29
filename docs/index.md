@@ -38,15 +38,15 @@ php artisan migrate
 ## 방법2: 커스텀 Livewire
 통합 Livewire 계시판과 달리 uri를 기준으로 동작을 수행할 수 있습니다.
 
-### SiteBoard-View
+### site-board-view
 라이브와이어로 구성된 싱글페이지가 페이지의 리로드가 없어 UI개선이 있지만, 특정 계시물을 외부로 노출하기에는 쉽지 않습니다.  
 
 예를 들어 `/board/news/3`과 같이 계시물 번호 `3`을 추가하는 경우에는 이를 표현할 수 없습니다.
-이런 경우 `SiteBoard-View` 컴포넌트를 사용할 수 있습니다.
+이런 경우 `site-board-view` 컴포넌트를 사용할 수 있습니다.
 
 ```php
 {{-- 계시판 글 보기 --}}
-@livewire("SiteBoard-view",[
+@livewire("site-board-view",[
 'actions' => $actions,
 'viewFile'=>"www::shop_fashion-v1.board.detail_view2"
 ])
@@ -61,7 +61,7 @@ document.addEventListener('livewire:init', () => {
 </script>
 ```
 
-`SiteBoard-view`는 외부의 컨트롤러 도움이 없어도 현재 url의 정보를 분석하여 계시물을 출력합니다.
+`site-board-view`는 외부의 컨트롤러 도움이 없어도 현재 url의 정보를 분석하여 계시물을 출력합니다.
 
 ### SiteBoard-create
 지정한 계시판에 직접 글을 쓸 수 있는 uri를 생성할 수 있습니다.
