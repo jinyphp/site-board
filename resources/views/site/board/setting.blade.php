@@ -1,17 +1,26 @@
 <div>
-    @if($design)
-    계시판 선택
-    {!! xSelect()
-        ->table('site_board','title')
-        ->setWire('model.defer',"forms.board")
-        ->setWidth("medium")
-    !!}
-    <button class="btn btn-primary" wire:click="applyBoard()">선택</button>
-    @else
-    <div class="alert alert-danger">
-        계시판이 존재하지 않습니다. 코드를 설정해 주세요
-    </div>
+    <!-- 팝업 계시판 설정 -->
+    @if($design && $popupSetting)
+
+        <x-dialog-modal wire:model="popupSetting" maxWidth="2xl">
+            <x-slot name="title">
+                걔시판 설정
+            </x-slot>
+            <x-slot name="content">
+                @includeIf("jiny-site-board::admin.board.form")
+            </x-slot>
+
+            <x-slot name="footer">
+                <div class="flex justify-between">
+                    <div>
+                    </div>
+                    <div>
+                        <x-button secondary wire:click="popupClose">취소</x-button>
+                        <x-button primary wire:click="update">수정</x-button>
+                    </div>
+                </div>
+            </x-slot>
+        </x-dialog-modal>
+
     @endif
-
-
 </div>

@@ -48,6 +48,8 @@ return new class extends Migration
             $table->string('permit_edit')->nullable();
             $table->string('permit_delete')->nullable();
 
+            ## 설명
+            $table->text('description')->nullable();
 
             ## 관리자
             $table->string('manager')->nullable();

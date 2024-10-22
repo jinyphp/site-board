@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+
 use Jiny\Site\Http\Controllers\SiteController;
 class SitePostCreate extends SiteController
 {

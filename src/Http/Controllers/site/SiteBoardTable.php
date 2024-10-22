@@ -27,17 +27,19 @@ class SiteBoardTable extends WireTablePopupForms
         ## 테이블 정보
         $this->actions['table'] = "site_board_";
 
-        $this->actions['view']['list'] = "jiny-site-board::site.board_code.list";
+
         $this->actions['view']['form'] = "jiny-site-board::site.board_code.form";
 
         $this->actions['title'] = "계시글";
         $this->actions['subtitle'] = "작성된 계시글을 관리합니다.";
 
+
         // 레이아웃을 커스텀 변경합니다.
-        $this->actions['view']['layout'] = "jiny-site-board::site.board_code.layout";
+        $this->actions['view']['layout'] = "jiny-site-board::site.board.table.layout";
 
         // 테이블을 커스텀 변경합니다.
-        $this->actions['view']['table'] = "jiny-site-board::site.board_code.table";
+        $this->actions['view']['table'] = "jiny-site-board::site.board.table.table";
+        $this->actions['view']['list'] = "jiny-site-board::site.board.table.list";
     }
 
     /**
@@ -59,38 +61,37 @@ class SiteBoardTable extends WireTablePopupForms
         return $board;
     }
 
-
+    /**
+     * 계시판 목록 출력
+     */
     public function index(Request $request)
     {
-        // 계시판 코드
+        // url로 계시판 코드 지정
         if(isset($request->code)) {
             $this->code = $request->code;
             $this->actions['code'] = $request->code;
         } else {
+            // actions에서 계시판 코드 지정
             if(isset($this->actions['code'])) {
                 $this->code = $this->actions['code'];
             }
         }
 
+        // 계시판 코드가 없으면 에러 페이지 출력
         if(!$this->code) {
-            return view("jiny-site-board::error",[
-                'message' => "지정한 계시판이 존재하지 않습니다."
-            ]);
+            // return view("jiny-site-board::error",[
+            //     'message' => "지정한 계시판이 존재하지 않습니다."
+            // ]);
+
+            // 계시판 데시보드 출력
+            return view("jiny-site-board::site.board.dashboard");
         }
 
 
         // DB에서 계시판 정보 읽기
         $board = $this->boardInfo($this->code);
-
-        ## actions 보드 정보들 추가합니다.
-        //$this->actions['board'] = []; //초기화
         if($board) {
-            // 계시판 테이블 정보
-            // foreach($board as $key => $value) {
-            //     $this->actions['board'][$key] = $value;
-            // }
-            // //$this->params['board'] = $this->actions['board'];
-            // $this->params['board'] = $board;
+            // 계시판마다 디자인을 변경할 수 있습니다.
 
             // 계시판 지정 레이아웃
             if($board->view_layout) {
@@ -109,7 +110,6 @@ class SiteBoardTable extends WireTablePopupForms
 
         } else {
             // 계시판이 존재하지 않습니다.
-            //$this->actions['view']['layout'] = "jiny-site-board::error";
             return view("jiny-site-board::error",[
                 'message' => "지정한 계시판이 존재하지 않습니다."
             ]);
@@ -120,8 +120,17 @@ class SiteBoardTable extends WireTablePopupForms
         $this->params['board'] = $board;
         $this->params['code'] = $this->code;
 
+        // 계시판조회
+        $rows = DB::table("site_board_".$board->code)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        $this->params['rows'] = $rows;
+        //dd($this->params);
+
         return parent::index($request);
     }
+
+
 
 
     ## 신규 데이터 DB 삽입전에 호출됩니다.

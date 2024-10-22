@@ -12,10 +12,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * 계시물을 작성합니다.
+ * 계시판 글을 수정합니다.
  */
 use Jiny\Site\Http\Controllers\SiteController;
-class SiteBoardCreate extends SiteController
+class SiteBoardEdit extends SiteController
 {
     public function __construct()
     {
@@ -28,16 +28,38 @@ class SiteBoardCreate extends SiteController
 
 
         // 레이아웃을 커스텀 변경합니다.
-        $this->actions['view']['create'] = "jiny-site-board::site.board.create.layout";
+        $this->actions['view']['layout'] = "jiny-site-board::site.board.view.layout";
 
-        $this->actions['view']['form'] = "jiny-site-board::site.board.create.form";
-
+        $this->actions['view']['confirm'] = "jiny-site-board::site.board_code.confirm";
     }
 
-    public function index(Request $request)
+    /**
+     * 계시판 정보 읽기
+     */
+    private function boardInfo($code)
+    {
+        $tablename = 'site_board';
+
+        // Slug로 코드 변경
+        $board = DB::table($tablename)->where('slug',$code)->first();
+        if($board) {
+            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+        } else {
+            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $board = DB::table($tablename)->where('code',$code)->first();
+        }
+
+        return $board;
+    }
+
+
+
+    public function edit(Request $request)
     {
         $code = $request->code;
         $this->actions['code'] = $code;
+
+        $id = $request->id;
 
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
@@ -48,6 +70,8 @@ class SiteBoardCreate extends SiteController
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
+        //dd($board);
+
         ## actions 보드 정보들 추가합니다.
         $this->actions['board'] = []; //초기화
         foreach($board as $key => $value) {
@@ -55,34 +79,37 @@ class SiteBoardCreate extends SiteController
         }
 
         // 계시판 지정 레이아웃
-        if($board->view_create) {
-            $this->actions['view']['create'] = $board->view_create;
+        // if($board->view_edit) {
+        //     $this->actions['view']['detail'] = $board->view_edit;
+        // }
+
+        // if($board->view_form) {
+        //     $this->actions['view']['form'] = $board->view_form;
+        // }
+
+
+        $row = DB::table("site_board_".$board->code)->where('id',$id)->first();
+        if(($row && $row->email == Auth::user()->email) || isAdmin()) {
+            $viewLayout = "jiny-site-board::site.board.edit.layout";
+            $this->actions['view']['form'] = "jiny-site-board::site.board_code.form";
+
+            return view($viewLayout,[
+                'actions' => $this->actions,
+                'code' => $code,
+                'board' => $board,
+                'row' => $row
+            ]);
         }
 
-        if($board->view_form) {
-            $this->actions['view']['form'] = $board->view_form;
-        }
-
-        // view에게 전달할 메개변수를 설정합니다.
-        // $this->params['board'] = $board;
-        // $this->params['code'] = $code;
-
-        return view($this->actions['view']['create'],[
+        return view("jiny-site-board::site.board.edit.error",[
             'actions' => $this->actions,
             'code' => $code,
             'board' => $board
         ]);
+
     }
 
-    ## 신규 데이터 DB 삽입전에 호출됩니다.
-    public function hookStoring($wire,$form)
-    {
-        return $form; // 사전 처리한 데이터를 반환합니다.
-    }
-
-    ## 라우트 post
-    ## ajax요청으로 들어온 내용을 저장합니다.
-    public function store(Request $request)
+    public function update(Request $request)
     {
         $code = $request->code;
 
@@ -95,30 +122,15 @@ class SiteBoardCreate extends SiteController
         }
         //$this->actions['table'] .= $code; // 테이블명을 변경함
 
-        $request->validate([
-            'forms.title' => 'required|string|max:255',
-            'forms.content' => 'required|string',
-        ]);
+        $id = $request->id;
 
         $forms = $request->forms;
-
         // 2. 시간정보 생성
-        $forms['created_at'] = date("Y-m-d H:i:s");
         $forms['updated_at'] = date("Y-m-d H:i:s");
 
-        // 로그인한 사용자 정보 가져오기
-        $user = Auth::user();
-        if ($user) {
-            $forms['name'] = $user->name;
-            $forms['email'] = $user->email;
-        } else {
-            // 로그인하지 않은 경우 처리
-            $forms['name'] = null;
-            $forms['email'] = null;
-        }
-
-        // 데이터를 삽입합니다.
-        DB::table($this->actions['table'])->insert($forms);
+        DB::table("site_board_".$board->code)
+            ->where('id',$id)
+            ->update($forms);
 
         return response()->json([
             'forms' => $forms,
@@ -127,25 +139,7 @@ class SiteBoardCreate extends SiteController
     }
 
 
-    ## 데이터를 수정하기전에 호출됩니다.
-    public function hookUpdating($wire, $form, $old)
-    {
 
 
-        return $form;
-    }
 
-    ## delete 동직이 실행된후 호출됩니다.
-    public function hookDeleted($wire, $row)
-    {
-
-        return $row;
-    }
-
-    ## 선택해서 삭제하는 경우 호출됩니다.
-    public function hookCheckDeleting($selected)
-    {
-
-
-    }
 }

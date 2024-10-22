@@ -3,17 +3,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 /**
- * Board Route
+ * 계시판 라우트
  */
 Route::middleware(['web'])->group(function(){
+    // 계시판 코드가 없는 경우에는 목록 데시보드를 출력합니다.
     Route::get('board/{code?}', [
         \Jiny\Site\Board\Http\Controllers\Site\SiteBoardTable::class,
         "index"]);
 
-    Route::get('board/{code}/{id}', [
-        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
-        "index"])->where('id', '[0-9]+');
-
+    // 계시판 글 작성
     Route::get('board/{code}/create', [
         \Jiny\Site\Board\Http\Controllers\Site\SiteBoardCreate::class,
         "index"]);
@@ -21,24 +19,34 @@ Route::middleware(['web'])->group(function(){
             \Jiny\Site\Board\Http\Controllers\Site\SiteBoardCreate::class,
             "store"]);
 
-    // 리소스 수정
-    Route::get('board/{code}/{id}/edit', [
+
+    // 계시판 코드가 있는 경우에는 상세 뷰를 출력합니다.
+    Route::get('board/{code}/{id}', [
         \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
+        "index"])->where('id', '[0-9]+');
+
+
+    // 계시판 수정
+    Route::get('board/{code}/{id}/edit', [
+        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardEdit::class,
         "edit"])->where('id', '[0-9]+');
     Route::put('board/{code}/{id}/edit', [
-        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
+        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardEdit::class,
         "update"])->where('id', '[0-9]+');
 
+
+
     // 리소스 삭제
-    Route::get('board/{code}/{id}/delete', [
-        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
-        "confirm"])->where('id', '[0-9]+');
     Route::delete('board/{code}/{id}', [
-        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
+        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardDelete::class,
         "destroy"])->where('id', '[0-9]+');
+
     Route::delete('board/{code}/{id}/delete', [
-        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardView::class,
+        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardDelete::class,
             "destroy"])->where('id', '[0-9]+');
+    Route::get('board/{code}/{id}/delete', [
+        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardDelete::class,
+        "confirm"])->where('id', '[0-9]+');
 
 });
 

@@ -30,8 +30,13 @@ class JinySiteBoardServiceProvider extends ServiceProvider
     {
         /* 라이브와이어 컴포넌트 등록 */
         $this->app->afterResolving(BladeCompiler::class, function () {
+            // 계시판 설정
             Livewire::component('site-board-setting',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardSetting::class);
+
+
+            Livewire::component('site-board-setup',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardSetup::class);
 
             // 계시판 방법1. Site Board popup with Livewire
             Livewire::component('site-widget-board',

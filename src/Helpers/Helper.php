@@ -43,6 +43,15 @@ if(!function_exists("getPosts")) {
     }
 }
 
+/**
+ * 계시판 전체 목록을 반환합니다.
+ */
+if(!function_exists("siteBoards")) {
+    function siteBoards() {
+        $db = DB::table('site_board')->orderBy('id', 'desc');
+        return $db->get();
+    }
+}
 
 /**
  * 계시판 목록을 반환합니다.

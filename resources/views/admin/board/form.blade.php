@@ -65,6 +65,61 @@
             </x-form-item>
         </x-form-hor>
 
+        <x-form-hor>
+            <x-form-label>설명</x-form-label>
+            <x-form-item>
+                {!! xTextarea()
+                    ->setWire('model.defer',"forms.description")
+                !!}
+            </x-form-item>
+        </x-form-hor>
+
+    </x-navtab-item>
+
+    <!-- 목록 -->
+    <x-navtab-item class="">
+        <x-navtab-link class="rounded-0">
+            <span class="d-none d-md-block">목록</span>
+        </x-navtab-link>
+
+        <x-form-hor>
+            <x-form-label>글쓰기 허용</x-form-label>
+            <x-form-item>
+                <input type="checkbox" wire:model.defer="forms.permit_create"
+                    {{ $forms['permit_create'] == 1 ? 'checked' : '' }}>
+            </x-form-item>
+        </x-form-hor>
+
+        <x-form-hor>
+            <x-form-label>테이블 Blade</x-form-label>
+            <x-form-item>
+                {!! xInputText()
+                    ->setWire('model.defer',"forms.view_table")
+                    ->setWidth("standard")
+                !!}
+            </x-form-item>
+        </x-form-hor>
+
+        <x-form-hor>
+            <x-form-label>리스트 Blade</x-form-label>
+            <x-form-item>
+                {!! xInputText()
+                    ->setWire('model.defer',"forms.view_list")
+                    ->setWidth("standard")
+                !!}
+            </x-form-item>
+        </x-form-hor>
+
+        <x-form-hor>
+            <x-form-label>필터  Blade</x-form-label>
+            <x-form-item>
+                {!! xInputText()
+                    ->setWire('model.defer',"forms.view_filter")
+                    ->setWidth("standard")
+                !!}
+            </x-form-item>
+        </x-form-hor>
+
     </x-navtab-item>
 
     <!-- formTab -->
@@ -83,35 +138,7 @@
             </x-form-item>
         </x-form-hor>
 
-        <x-form-hor>
-            <x-form-label>테이블</x-form-label>
-            <x-form-item>
-                {!! xInputText()
-                    ->setWire('model.defer',"forms.view_table")
-                    ->setWidth("standard")
-                !!}
-            </x-form-item>
-        </x-form-hor>
 
-        <x-form-hor>
-            <x-form-label>리스트</x-form-label>
-            <x-form-item>
-                {!! xInputText()
-                    ->setWire('model.defer',"forms.view_list")
-                    ->setWidth("standard")
-                !!}
-            </x-form-item>
-        </x-form-hor>
-
-        <x-form-hor>
-            <x-form-label>필터</x-form-label>
-            <x-form-item>
-                {!! xInputText()
-                    ->setWire('model.defer',"forms.view_filter")
-                    ->setWidth("standard")
-                !!}
-            </x-form-item>
-        </x-form-hor>
 
         <x-form-hor>
             <x-form-label>글작성</x-form-label>

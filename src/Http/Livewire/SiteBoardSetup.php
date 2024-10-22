@@ -6,29 +6,16 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 
-use Livewire\Attributes\On;
-
-class SiteBoardSetting extends Component
+class SiteBoardSetup extends Component
 {
     public $uri;
     public $code;
 
     public $forms = [];
 
-    public $popupSetting = false;
-    public $design;
 
-    #[On('design-mode')]
-    public function designMode($mode=null)
-    {
-        if($this->design) {
-            $this->design = false;
-            $this->popupSetting = false;
-        } else {
-            $this->design = true;
-            $this->popupSetting = true;
-        }
-    }
+    ## Hotkey 디자인 모드
+    use \Jiny\Widgets\Http\Trait\DesignMode;
 
     public function mount()
     {
@@ -38,47 +25,12 @@ class SiteBoardSetting extends Component
 
     public function render()
     {
-        if($this->popupSetting) {
-            // slug 코드로 찾기
-            $row = DB::table('site_board')->where('slug',$this->code)->first();
-            if(!$row) {
-                // code 코드로 찾기
-                $row = DB::table('site_board')->where('code',$this->code)->first();
-            }
-
-            if($row) {
-                foreach($row as $key => $value) {
-                    $this->forms[$key] = $value;
-                }
-            }
-
-            //dd($row);
-
-        }
-
         $this->viewFile = "jiny-site-board::site.board.setting";
+
         return view($this->viewFile,[
 
         ]);
     }
-
-    public function popupClose()
-    {
-        $this->popupSetting = false;
-        $this->design = false;
-    }
-
-    public function update()
-    {
-        $id = $this->forms['id'];
-        unset($this->forms['id']);
-
-        DB::table('site_board')->where('id',$id)->update($this->forms);
-        $this->popupSetting = false;
-        $this->design = false;
-    }
-
-
 
     public function applyBoard()
     {
