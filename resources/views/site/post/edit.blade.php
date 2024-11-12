@@ -1,82 +1,34 @@
-<x-www-layout>
-    <!-- Page content -->
-    <main class="content-wrapper">
+<x-wire-dialog-modal wire:model="popupForm" :maxWidth="$popupWindowWidth">
+    <x-slot name="title">
+        {{ __('글 수정') }}
+    </x-slot>
 
-        <!-- Breadcrumb -->
-        <nav class="container pt-3 my-3 my-md-4" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="/">Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="/board/{{$code}}">Board</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    {{$code}}
-                </li>
-            </ol>
-        </nav>
+    <x-slot name="content">
 
-        <!-- Post content + Sidebar -->
-        <section class="container pb-5 mb-2 mb-md-3 mb-lg-4 mb-xl-5">
-            <form action="/board/{{$code}}/{{$row->id}}/edit" id="ajaxForm" method="POST">
-                @csrf
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="_method" value="PUT">
+        @includeIf($viewFormFile)
 
-                @includeIf($actions['view']['form'])
+    </x-slot>
 
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <button class="btn btn-danger">삭제</button>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </form>
+    <x-slot name="footer">
+        <div class="flex justify-between">
+            <div>
+                @if(!$popupDelete)
+                <button class="btn btn-danger" wire:click="delete('{{$forms['id']}}')">삭제</button>
+                @else
+                <button type="button" class="btn btn-danger btn-sm" wire:click="deleteConfirm">예, 삭제 합니다.</button>
+                @endif
 
+            </div>
+            <div>
+                <button class="btn btn-secondary" wire:click="editCancel('{{$forms['id']}}')">
+                    취소
+                </button>
 
-<div id="responseMessage"></div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('ajaxForm');
-
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent the default form submission
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    console.log(result);
-                    document.getElementById('responseMessage').innerText
-                        = 'Form submitted successfully!';
-                    // 이전 페이지로 이동
-                    window.history.back(); //go(-2);
-
-                } else {
-                    document.getElementById('responseMessage').innerText
-                    = 'Error: ' + result.message;
-                }
-
-            } catch (error) {
-                    document.getElementById('responseMessage').innerText = 'Error: ' + error.message;
-            }
-        });
-    });
-</script>
-        </section>
-    </main>
-
-</x-www-layout>
-
+                {{-- @if(isset($widget['edit']['enable']) && $widget['edit']['enable'])
+                <button class="btn btn-info" wire:click="update">수정</button>
+                @endif --}}
+                <button class="btn btn-info" wire:click="update">수정</button>
+            </div>
+        </div>
+    </x-slot>
+</x-wire-dialog-modal>

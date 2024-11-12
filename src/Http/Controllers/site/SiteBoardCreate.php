@@ -98,6 +98,7 @@ class SiteBoardCreate extends SiteController
         $request->validate([
             'forms.title' => 'required|string|max:255',
             'forms.content' => 'required|string',
+            'forms.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 이미지 필드를 nullable로 변경
         ]);
 
         $forms = $request->forms;
@@ -118,11 +119,33 @@ class SiteBoardCreate extends SiteController
         }
 
         // 데이터를 삽입합니다.
-        DB::table($this->actions['table'])->insert($forms);
+        $id = DB::table($this->actions['table'])->insertGetId($forms);
+
+        // 이미지 업로드 처리
+        if ($request->hasFile('forms.image')) {
+
+                $image = $request->file('forms.image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imagePath = public_path("images/board/{$code}/{$id}");
+
+                // 디렉토리가 없으면 생성
+                if (!file_exists($imagePath)) {
+                    mkdir($imagePath, 0755, true);
+                }
+
+                $image->move($imagePath, $imageName);
+
+                // 이미지 경로를 데이터베이스에 저장
+                DB::table($this->actions['table'])
+                    ->where('id', $id)
+                    ->update(['image' => "images/board/{$code}/{$id}/" . $imageName]);
+
+        }
 
         return response()->json([
             'forms' => $forms,
-            'message' => 'Form submitted successfully!',
+            'success' => true,
+            'message' => '게시물이 성공적으로 등록되었습니다!',
         ]);
     }
 

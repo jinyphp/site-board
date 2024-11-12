@@ -2,12 +2,11 @@
     <x-www-layout>
         <x-www-main>
 
-
-
-            <div class="d-flex justify-content-between align-items-start">
+            {{-- 계시판 타이틀 --}}
+            <div class="d-flex justify-content-between align-items-start mb-4">
                 <div>
                     <h2>{{ $board->title }}</h2>
-                    <p class="text-muted">{{ $board->description }}</p>
+                    <p class="text-muted">{{ $board->subtitle }}</p>
                 </div>
                 <div>
                     <!-- Breadcrumb -->
@@ -17,7 +16,7 @@
                                 <a href="/">Home</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="/board/{{$code}}">Board</a>
+                                <a href="{{ route('board.list', ['code' => $code]) }}">Board</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
                                 {{$code}}
@@ -25,14 +24,21 @@
                         </ol>
                     </nav>
 
-                    
-                </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="window.history.back()">
+                            취소
+                        </button>
+                    </div>
 
+                </div>
             </div>
 
 
             {{-- 입력폼 --}}
-            <form action="/board/{{$code}}/create" id="ajaxForm" method="POST">
+            <form action="{{ route('board.store', ['code' => $code]) }}"
+                id="ajaxForm"
+                method="POST">
                 @csrf
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -65,9 +71,7 @@
                             const result = await response.json();
 
                             if (response.ok) {
-                                console.log(result);
-                                // document.getElementById('responseMessage').innerText
-                                //     = 'Form submitted successfully!';
+                                //console.log(result);
                                 // // 이전 페이지로 이동
                                 window.history.back(); //go(-2);
 

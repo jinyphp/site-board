@@ -43,7 +43,7 @@
 
 
                         <!-- Related articles -->
-                        @livewire('SiteBoard-related')
+                        @livewire('site-board-related')
 
                     </div>
 

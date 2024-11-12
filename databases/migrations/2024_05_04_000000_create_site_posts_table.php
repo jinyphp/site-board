@@ -14,6 +14,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
+            $table->string('enable')->nullable();
+
             // 분류코드
             $table->string('code')->nullable();
             $table->string('slug')->nullable();
@@ -27,6 +29,8 @@ return new class extends Migration
             $table->string('categories')->nullable();
             $table->string('keyword')->nullable();
             $table->string('tags')->nullable();
+
+            $table->string('trading')->nullable();
 
             // 제목내용
             $table->string('title')->nullable();

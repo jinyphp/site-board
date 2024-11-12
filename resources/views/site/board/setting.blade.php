@@ -1,7 +1,6 @@
 <div>
     <!-- 팝업 계시판 설정 -->
     @if($design && $popupSetting)
-
         <x-dialog-modal wire:model="popupSetting" maxWidth="2xl">
             <x-slot name="title">
                 걔시판 설정
@@ -21,6 +20,5 @@
                 </div>
             </x-slot>
         </x-dialog-modal>
-
     @endif
 </div>

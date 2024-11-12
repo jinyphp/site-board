@@ -94,6 +94,14 @@ class SiteBoardView extends SiteController
 
         $row = DB::table("site_board_".$board->code)->where('id',$id)->first();
         if($row) {
+
+            // 세션을 사용하여 조회수 중복 증가 방지
+            $viewKey = 'viewed_post_' . $id;
+            if (!$request->session()->has($viewKey)) {
+                DB::table("site_board_".$board->code)->where('id', $id)->increment('click');
+                $request->session()->put($viewKey, true);
+            }
+
             $this->params['row'] = $row;
             return parent::index($request);
         }

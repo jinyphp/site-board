@@ -19,13 +19,8 @@ class SitePostTable extends WireTablePopupForms
         parent::__construct();
         $this->setVisit($this);
 
+
         ## actions 기본설정 동작처리
-        $this->setActions();
-
-    }
-
-    private function setActions()
-    {
         ## 테이블 정보
         $actions['table'] = "site_posts";
 
@@ -43,12 +38,16 @@ class SitePostTable extends WireTablePopupForms
         $actions['view']['list'] = "jiny-site-board::site.post_grid.item";
 
         $this->setReflectActions($actions);
+
     }
+
+
 
 
 
     public function index(Request $request)
     {
+        dd("aa");
         return parent::index($request);
     }
 

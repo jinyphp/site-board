@@ -91,7 +91,7 @@ class SiteBoardEdit extends SiteController
         $row = DB::table("site_board_".$board->code)->where('id',$id)->first();
         if(($row && $row->email == Auth::user()->email) || isAdmin()) {
             $viewLayout = "jiny-site-board::site.board.edit.layout";
-            $this->actions['view']['form'] = "jiny-site-board::site.board_code.form";
+            $this->actions['view']['form'] = "jiny-site-board::site.board.edit.form";
 
             return view($viewLayout,[
                 'actions' => $this->actions,
@@ -127,6 +127,23 @@ class SiteBoardEdit extends SiteController
         $forms = $request->forms;
         // 2. 시간정보 생성
         $forms['updated_at'] = date("Y-m-d H:i:s");
+
+        // 이미지 업로드 처리
+        if ($request->hasFile('forms.image')) {
+            $image = $request->file('forms.image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = public_path("images/board/{$code}/{$id}");
+
+            // 디렉토리가 없으면 생성
+            if (!file_exists($imagePath)) {
+                mkdir($imagePath, 0755, true);
+            }
+
+            $image->move($imagePath, $imageName);
+
+            // 이미지 경로를 $forms 배열에 추가
+            $forms['image'] = "images/board/{$code}/{$id}/" . $imageName;
+        }
 
         DB::table("site_board_".$board->code)
             ->where('id',$id)

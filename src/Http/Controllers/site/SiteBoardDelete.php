@@ -107,8 +107,15 @@ class SiteBoardDelete extends SiteController
         $post = DB::table("site_board_".$board->code)->where('id', $id)->first();
 
         // 사용자 권한 확인
-        // Auth::check() &&
         if (Auth::user()->email === $post->email || isAdmin()) {
+            // 이미지 파일 및 폴더 삭제
+            if ($post->image) {
+                $uploadPath = public_path('uploads/board/' . $post->id);
+                if (is_dir($uploadPath)) {
+                    $this->deleteDirectory($uploadPath);
+                }
+            }
+
             $forms = $request->forms;
             DB::table($this->actions['table'])
                 ->where('id', $id)
@@ -117,7 +124,7 @@ class SiteBoardDelete extends SiteController
             return response()->json([
                 'forms' => $forms,
                 'success' => true,
-                'message' => '게시물이 성공적으로 삭제되었습니다.',
+                'message' => '게시물, 관련 이미지 및 폴더가 성공적으로 삭제되었습니다.',
             ]);
         } else {
             return response()->json([
@@ -127,6 +134,26 @@ class SiteBoardDelete extends SiteController
         }
     }
 
+    // 폴더와 그 내용을 재귀적으로 삭제하는 헬퍼 메서드
+    private function deleteDirectory($dir) {
+        if (!file_exists($dir)) {
+            return true;
+        }
 
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
 
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+        }
+
+        return rmdir($dir);
+    }
 }

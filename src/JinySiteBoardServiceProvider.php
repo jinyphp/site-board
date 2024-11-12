@@ -24,23 +24,36 @@ class JinySiteBoardServiceProvider extends ServiceProvider
         Blade::component($this->package.'::components.'.'ajaxFormEdit', 'ajax-form-edit');
         Blade::component($this->package.'::components.'.'ajaxFormDelete', 'ajax-form-delete');
 
+
+        Blade::component($this->package.'::components.'.'siteBoardSnippet', 'site-board-snippet');
+
     }
 
     public function register()
     {
         /* 라이브와이어 컴포넌트 등록 */
         $this->app->afterResolving(BladeCompiler::class, function () {
+            /**
+             * 계시판
+             */
             // 계시판 설정
             Livewire::component('site-board-setting',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardSetting::class);
 
-
             Livewire::component('site-board-setup',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardSetup::class);
 
+
+            // 계시판 스니펫
+            Livewire::component('site-board-snippet',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardSnippet::class);
+
+
+
+
             // 계시판 방법1. Site Board popup with Livewire
-            Livewire::component('site-widget-board',
-                \Jiny\Site\Board\Http\Livewire\WidgetBoard::class);
+            Livewire::component('site-forum',
+                \Jiny\Site\Board\Http\Livewire\SiteForumWidget::class);
             Livewire::component('site-board-flip',
                 \Jiny\Site\Board\Http\Livewire\SiteBoardFlip::class);
 
@@ -63,21 +76,51 @@ class JinySiteBoardServiceProvider extends ServiceProvider
 
 
             ## 연관 계시글
-            Livewire::component('SiteBoard-related',
-                \Jiny\Site\Board\Http\Livewire\BoardRelated::class);
+            Livewire::component('site-board-related',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardRelated::class);
+
             Livewire::component('SiteBoard-trend',
                 \Jiny\Site\Board\Http\Livewire\BoardTrend::class);
 
+            /**
+             * Post
+             */
 
-            ## Post
-            Livewire::component('SitePost-list',
-                \Jiny\Site\Board\Http\Livewire\SitePostList::class);
+            Livewire::component('site-post',
+                \Jiny\Site\Board\Http\Livewire\SitePostWidget::class);
 
-            Livewire::component('SitePost-create',
-                \Jiny\Site\Board\Http\Livewire\SitePostCreate::class);
+            // ## Post
+            // Livewire::component('SitePost-list',
+            //     \Jiny\Site\Board\Http\Livewire\SitePostList::class);
 
-            Livewire::component('SitePost-view',
-                \Jiny\Site\Board\Http\Livewire\SitePostView::class);
+            // Livewire::component('SitePost-create',
+            //     \Jiny\Site\Board\Http\Livewire\SitePostCreate::class);
+
+            // Livewire::component('SitePost-view',
+            //     \Jiny\Site\Board\Http\Livewire\SitePostView::class);
+
+
+            // 계시판 댓글
+            Livewire::component('site-board-comment',
+                \Jiny\Site\Board\Http\Livewire\SiteBoardComment::class);
+
+
+            /**
+             * 블로그
+             */
+            // 블로그
+            Livewire::component('site-upload-image',
+                \Jiny\Site\Board\Http\Livewire\SiteUploadImage::class);
+
+            Livewire::component('site-blog-create',
+                \Jiny\Site\Board\Http\Livewire\SiteBlogCreate::class);
+
+            Livewire::component('site-blog-cate',
+                \Jiny\Site\Board\Http\Livewire\SiteBlogCate::class);
+
+            Livewire::component('site-blog-trend',
+                \Jiny\Site\Board\Http\Livewire\SiteBlogTrend::class);
+
 
         });
     }

@@ -1,32 +1,23 @@
-<x-www-layout>
-    <!-- Page content -->
-    <main class="content-wrapper">
+<x-www-app>
+    <x-www-layout>
+        <div class="container">
+            @livewire('site-board-setting')
+            {{-- <div class="alert alert-danger">
+                계시판이 존재하지 않습니다. 코드를 설정해 주세요
+            </div> --}}
 
-        <!-- Breadcrumb -->
-        <nav class="container pt-3 my-3 my-md-4" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="/">Home</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="/board/{{$code}}">Board</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    {{$code}}
-                </li>
-            </ol>
-        </nav>
+        </div>
+    </x-www-layout>
 
-        <section class="container pb-5 mb-1 mb-sm-3 mb-lg-4 mb-xl-5">
-            <div class="alert alert-danger">
-                {{$message}}
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('page-realod', (event) => {
+                console.log("page-realod");
+                location.reload();
+            });
+        });
+    </script>
 
-            </div>
+</x-www-app>
 
-
-        </section>
-
-    </main>
-
-</x-www-layout>
 

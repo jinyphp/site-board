@@ -16,8 +16,10 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('board_id')->nullable();
-
+            $table->string('code')->nullable();
+            $table->string('post_id')->nullable();
             // 작성자 정보
+            $table->string('user_id')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('password')->nullable(); // 비회원일 경우 비밀번호 필요

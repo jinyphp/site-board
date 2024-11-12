@@ -28,6 +28,7 @@ class SitePostController extends Controller
 
     public function list()
     {
+        dd("aa");
         return view("jiny-site-board::site.post.layout");
 
     }

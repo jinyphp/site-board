@@ -1,26 +1,32 @@
 <x-www-app>
     <x-www-layout>
+        <x-www-main>
+            <nav class="pt-3 my-3 my-md-4" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="home-electronics.html">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Post</li>
+                </ol>
+            </nav>
 
-        <!-- Breadcrumb -->
-        <nav class="container pt-3 my-3 my-md-4" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="home-electronics.html">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Blog</li>
-            </ol>
-        </nav>
+            <div class="mb-4">
+                @livewire('site-post', [
+                    'actions' => $actions,
+                    'code' => $code
+                ])
+            </div>
 
-        <main class="content-wrapper">
-            {{-- post에서 5개를 읽어 전달합니다. --}}
-            @partials('blog1',['rows'=>getPosts(4)])
+            <div class="mb-4">
+                <!-- Subscription CTA -->
+                {{-- @livewire('site-subscription',[
+                    'widget_id' => 2
+                ]) --}}
+            </div>
 
-            <hr class="my-0 my-md-2 my-lg-4">
-
-            @partials('blog_with_sidebar')
-        </main>
-
-
-        {{-- @partials('video_reviews') --}}
-
-
+            <div  class="mb-4">
+                <!-- Related articles -->
+                {{-- @livewire('site-board-related') --}}
+            </div>
+        </x-www-main>
     </x-www-layout>
 </x-www-app>
+

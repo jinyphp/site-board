@@ -1,0 +1,34 @@
+/**
+ * Post (단일 테이블)
+ */
+Route::middleware(['web'])
+    ->name('post')
+    ->prefix("/post")->group(function () {
+
+        // // 포스트 목록
+        // Route::get('/', [
+        //     \Jiny\Site\Board\Http\Controllers\Site\SitePostTable::class,
+        //     "index"]);
+
+        // // 포스트 작성
+        // Route::get('/create', [
+        //     \Jiny\Site\Board\Http\Controllers\Site\SitePostCreate::class,
+        //     "index"]);
+        // Route::post('/create', [
+        //     \Jiny\Site\Board\Http\Controllers\Site\SitePostCreate::class,
+        //     "store"]);
+
+        /*
+        // 포스트 목록을 출력
+        Route::get('/', [
+            \Jiny\Site\Board\Http\Controllers\Site\SitePostController::class,
+            "index"])->middleware(['web']);
+        */
+
+        // // 포스트 상세 보기
+        // Route::get('/{id}', [
+        //     \Jiny\Site\Board\Http\Controllers\Site\SitePostView::class,
+        //     "index"])
+        //     ->where('id', '[0-9]+')
+        //     ->middleware(['web']);
+ });
