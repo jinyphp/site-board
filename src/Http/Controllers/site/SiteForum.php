@@ -25,7 +25,7 @@ class SiteForum extends WireTablePopupForms
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board_";
+        $this->actions['table']['name'] = "site_board_";
 
         $this->actions['view']['list'] = "jiny-site-board::site.forum.code.list";
         $this->actions['view']['form'] = "jiny-site-board::site.Forum.code.form";
@@ -50,9 +50,9 @@ class SiteForum extends WireTablePopupForms
         // Slug로 코드 변경
         $board = DB::table($tablename)->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table($tablename)->where('code',$code)->first();
         }
 

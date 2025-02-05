@@ -79,9 +79,9 @@ class SiteBoardCreate extends Component
         $code = $this->code;
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] = "site_board_".$board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] = "site_board_".$board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] = "site_board_".$code; // 테이블명을 변경함
+            $this->actions['table']['name'] = "site_board_".$code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -253,7 +253,7 @@ class SiteBoardCreate extends Component
             // 5. 데이터 삽입
             if($form) {
                 //dd($form);
-                $id = DB::table($this->actions['table'])->insertGetId($form);
+                $id = DB::table($this->actions['table']['name'])->insertGetId($form);
                 $form['id'] = $id;
                 $this->last_id = $id;
 

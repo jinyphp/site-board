@@ -20,7 +20,7 @@ class AdminBoardCode extends WireTablePopupForms
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board_";
+        $this->actions['table']['name'] = "site_board_";
 
         $this->actions['view']['list'] = "jiny-site-board::admin.board_code.list";
         $this->actions['view']['form'] = "jiny-site-board::admin.board_code.form";
@@ -32,7 +32,7 @@ class AdminBoardCode extends WireTablePopupForms
     public function index(Request $request)
     {
         $code = $request->code;
-        $this->actions['table'] .= $code; // 테이블명을 변경함
+        $this->actions['table']['name'] .= $code; // 테이블명을 변경함
 
         return parent::index($request);
     }

@@ -25,7 +25,7 @@ class SitePosts extends WireTablePopupForms
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board_";
+        $this->actions['table']['name'] = "site_board_";
 
         $this->actions['view']['list'] = "jiny-site-board::site.forum.code.list";
         $this->actions['view']['form'] = "jiny-site-board::site.Forum.code.form";

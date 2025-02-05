@@ -217,7 +217,7 @@ class SitePostCreate extends Component
 
             // 5. 데이터 삽입
             if($forms) {
-                $id = DB::table($this->actions['table'])->insertGetId($forms);
+                $id = DB::table($this->actions['table']['name'])->insertGetId($forms);
                 $forms['id'] = $id;
                 $this->last_id = $id;
 

@@ -64,11 +64,7 @@ Route::middleware(['web'])->group(function(){
         "confirm"])->where('id', '[0-9]+');
 
 
-    // 계시판 클립보드 이미지 업로드
-    // 이미지 업로드
-    Route::post('/board/images', [
-        \Jiny\Site\Board\Http\Controllers\Site\SiteBoardImage::class,
-        "store"]);
+
 
 });
 
@@ -152,8 +148,14 @@ Route::middleware(['web'])
         "index"]);
 });
 
-
-
+/**
+ * todo post
+ */
+Route::middleware(['web'])->group(function(){
+    Route::get('/home/todo', [
+        \Jiny\Site\Board\Http\Controllers\Site\SiteTodo::class,
+    "index"]);
+});
 /**
  * Admin Site Router
  */

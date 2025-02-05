@@ -86,6 +86,10 @@ class JinySiteBoardServiceProvider extends ServiceProvider
              * Post
              */
 
+            // post 설정
+            Livewire::component('site-post-setting',
+                \Jiny\Site\Board\Http\Livewire\SitePostSetting::class);
+
             Livewire::component('site-post',
                 \Jiny\Site\Board\Http\Livewire\SitePostWidget::class);
 
@@ -109,9 +113,6 @@ class JinySiteBoardServiceProvider extends ServiceProvider
              * 블로그
              */
             // 블로그
-            Livewire::component('site-upload-image',
-                \Jiny\Site\Board\Http\Livewire\SiteUploadImage::class);
-
             Livewire::component('site-blog-create',
                 \Jiny\Site\Board\Http\Livewire\SiteBlogCreate::class);
 

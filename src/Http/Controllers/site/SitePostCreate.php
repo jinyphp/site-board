@@ -21,7 +21,7 @@ class SitePostCreate extends SiteController
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_posts";
+        $this->actions['table']['name'] = "site_posts";
 
         //$this->actions['view']['form'] = "jiny-site-board::site.post.form";
 
@@ -52,7 +52,7 @@ class SitePostCreate extends SiteController
         $forms['updated_at'] = date("Y-m-d H:i:s");
 
         // 데이터를 삽입합니다.
-        DB::table($this->actions['table'])->insert($forms);
+        DB::table($this->actions['table']['name'])->insert($forms);
 
         return response()->json([
             'forms' => $forms,

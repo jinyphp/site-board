@@ -23,7 +23,7 @@ class SiteBlogEdit extends SiteController
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_blogs";
+        $this->actions['table']['name'] = "site_blogs";
 
         // 레이아웃을 커스텀 변경합니다.
         $this->actions['view']['layout'] = "jiny-site-board::site.blogs.view.layout";

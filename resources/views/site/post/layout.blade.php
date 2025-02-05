@@ -27,6 +27,12 @@
                 {{-- @livewire('site-board-related') --}}
             </div>
         </x-www-main>
+
+        {{-- post 설정 --}}
+        {{-- @livewire('site-post-setting', [
+            'code' => 'post',
+        ]) --}}
+
     </x-www-layout>
 </x-www-app>
 

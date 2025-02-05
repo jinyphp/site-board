@@ -20,7 +20,7 @@ class AdminBoard extends WireTablePopupForms
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board";
+        $this->actions['table']['name'] = "site_board";
 
         $this->actions['view']['list'] = "jiny-site-board::admin.board.list";
         $this->actions['view']['form'] = "jiny-site-board::admin.board.form";
@@ -106,7 +106,7 @@ class AdminBoard extends WireTablePopupForms
     ## 선택해서 삭제하는 경우 호출됩니다.
     public function hookCheckDeleting($selected)
     {
-        $rows = DB::table($this->actions['table'])->whereIn('id',$selected)->get();
+        $rows = DB::table($this->actions['table']['name'])->whereIn('id',$selected)->get();
         //dd($rows);
         foreach($rows as $item) {
             Schema::dropIfExists("site_board_".$item->code);

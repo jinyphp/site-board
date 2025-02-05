@@ -87,7 +87,9 @@ class SitePostWidget extends Component
 
     public function mount()
     {
-        $this->tablename = "site_posts";
+        if(!$this->tablename) {
+            $this->tablename = "site_posts";
+        }
 
         // 권환체크
         $this->permitCheck();
@@ -372,10 +374,7 @@ class SitePostWidget extends Component
             // Livewire Table을 갱신을 호출합니다.
             // $this->emit('refeshTable');
 
-            // 계시물 추가 갯수를 증가합니다.
-            DB::table('site_board')
-                ->where('code',$this->board['code'] )
-                ->increment('post');
+
 
         } else {
             $this->popupPermitOpen();
@@ -737,34 +736,6 @@ class SitePostWidget extends Component
 
         return $path;
     }
-
-    // 계시판 변경
-    // public function applyBoard()
-    // {
-    //     //dd($this->forms);
-    //     if(isset($this->forms['board'])) {
-
-    //         $path = resource_path("actions");
-    //         $url = DIRECTORY_SEPARATOR.str_replace("/",DIRECTORY_SEPARATOR,$this->uri);
-    //         if(file_exists($path.$url.".json")) {
-    //             $actions = json_file_decode($path.$url.".json");
-
-    //             $id = _getKey($this->forms['board']);
-    //             $board = DB::table('site_board')->where('id',$id)->first();
-    //             if($board) {
-    //                 $actions['code'] = $board->code;
-    //                 $this->code = $board->code;
-    //                 json_file_encode($path.$url.".json", $actions);
-
-    //                 // 페이지 리로드 이벤트 발생
-    //                 // 현재 목록을 삭제하였기 때문에, 페이지 전체 리로드가 필요함
-    //                 $this->dispatch('page-realod');
-    //             }
-
-
-    //         }
-    //     }
-    // }
 
 
 }

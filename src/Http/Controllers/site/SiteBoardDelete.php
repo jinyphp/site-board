@@ -23,7 +23,7 @@ class SiteBoardDelete extends SiteController
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board_";
+        $this->actions['table']['name'] = "site_board_";
 
 
 
@@ -43,9 +43,9 @@ class SiteBoardDelete extends SiteController
         // Slug로 코드 변경
         $board = DB::table($tablename)->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table($tablename)->where('code',$code)->first();
         }
 
@@ -66,9 +66,9 @@ class SiteBoardDelete extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -80,7 +80,7 @@ class SiteBoardDelete extends SiteController
             $this->actions['board'][$key] = $value;
         }
 
-        $row = DB::table($this->actions['table'])->where('id',$id)->first();
+        $row = DB::table($this->actions['table']['name'])->where('id',$id)->first();
 
         return view($this->actions['view']['confirm'],[
             'actions' => $this->actions,
@@ -96,9 +96,9 @@ class SiteBoardDelete extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
         }
 
         $id = $request->id;
@@ -117,7 +117,7 @@ class SiteBoardDelete extends SiteController
             }
 
             $forms = $request->forms;
-            DB::table($this->actions['table'])
+            DB::table($this->actions['table']['name'])
                 ->where('id', $id)
                 ->delete();
 

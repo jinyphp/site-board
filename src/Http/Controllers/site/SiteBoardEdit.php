@@ -23,7 +23,7 @@ class SiteBoardEdit extends SiteController
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board_";
+        $this->actions['table']['name'] = "site_board_";
 
 
 
@@ -43,9 +43,9 @@ class SiteBoardEdit extends SiteController
         // Slug로 코드 변경
         $board = DB::table($tablename)->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table($tablename)->where('code',$code)->first();
         }
 
@@ -64,9 +64,9 @@ class SiteBoardEdit extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -116,11 +116,11 @@ class SiteBoardEdit extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
         }
-        //$this->actions['table'] .= $code; // 테이블명을 변경함
+        //$this->actions['table']['name'] .= $code; // 테이블명을 변경함
 
         $id = $request->id;
 

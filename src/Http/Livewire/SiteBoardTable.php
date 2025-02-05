@@ -85,9 +85,9 @@ class SiteBoardTable extends Component
         $code = $this->code;
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] = "site_board_".$board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] = "site_board_".$board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] = "site_board_".$code; // 테이블명을 변경함
+            $this->actions['table']['name'] = "site_board_".$code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -204,7 +204,7 @@ class SiteBoardTable extends Component
 
     private function table()
     {
-        $this->setTable($this->actions['table']);
+        $this->setTable($this->actions['table']['name']);
 
         // 2. 후킹_before :: 컨트롤러 메서드 호출
         // DB 데이터를 조회하는 방법들을 변경하려고 할때 유용합니다.
@@ -221,8 +221,8 @@ class SiteBoardTable extends Component
 
         // 3. DB에서 데이터를 읽어 옵니다.
         $rows = $this->dataFetch($this->actions);
-        //$rows = DB::table($this->actions['table'])->get();
-        //$rows = DB::table($this->actions['table'])->paginate($this->paging);
+        //$rows = DB::table($this->actions['table']['name'])->get();
+        //$rows = DB::table($this->actions['table']['name'])->paginate($this->paging);
         //dump($rows);
         $totalPages = $rows->lastPage();
         $currentPage = $rows->currentPage();
@@ -411,7 +411,7 @@ class SiteBoardTable extends Component
             // 5. 데이터 삽입
             if($form) {
                 //dd($form);
-                $id = DB::table($this->actions['table'])->insertGetId($form);
+                $id = DB::table($this->actions['table']['name'])->insertGetId($form);
                 $form['id'] = $id;
                 $this->last_id = $id;
 
@@ -447,7 +447,7 @@ class SiteBoardTable extends Component
     {
         $this->mode = "view";
 
-        $row = DB::table($this->actions['table'])
+        $row = DB::table($this->actions['table']['name'])
             ->find($id);
         $this->setForm($row);
     }
@@ -484,7 +484,7 @@ class SiteBoardTable extends Component
             }
 
             if (isset($this->actions['id'])) {
-                $row = DB::table($this->actions['table'])->find($this->actions['id']);
+                $row = DB::table($this->actions['table']['name'])->find($this->actions['id']);
                 $this->setForm($row);
             }
 
@@ -533,7 +533,7 @@ class SiteBoardTable extends Component
     {
         if($this->permit['update']) {
             // step1. 수정전, 원본 데이터 읽기
-            $origin = DB::table($this->actions['table'])->find($this->actions['id']);
+            $origin = DB::table($this->actions['table']['name'])->find($this->actions['id']);
             foreach ($origin as $key => $value) {
                 $this->forms_old[$key] = $value;
             }
@@ -561,7 +561,7 @@ class SiteBoardTable extends Component
 
             // uploadfile 필드 조회
             /*
-            $fields = DB::table('uploadfile')->where('table', $this->actions['table'])->get();
+            $fields = DB::table('uploadfile')->where('table', $this->actions['table']['name'])->get();
             foreach($fields as $item) {
                 $key = $item->field; // 업로드 필드명
                 if($origin->$key != $this->forms[$key]) {
@@ -577,7 +577,7 @@ class SiteBoardTable extends Component
                 //dd($this->forms);
                 $this->forms['updated_at'] = date("Y-m-d H:i:s");
 
-                DB::table($this->actions['table'])
+                DB::table($this->actions['table']['name'])
                     ->where('id', $this->actions['id'])
                     ->update($this->forms);
             }
@@ -628,7 +628,7 @@ class SiteBoardTable extends Component
         $this->mode = null;
 
         if($this->permit['delete']) {
-            $row = DB::table($this->actions['table'])->find($this->actions['id']);
+            $row = DB::table($this->actions['table']['name'])->find($this->actions['id']);
             $form = [];
             foreach($row as $key => $value) {
                 $form[$key] = $value;
@@ -641,7 +641,7 @@ class SiteBoardTable extends Component
 
             // uploadfile 필드 조회
             /*
-            $fields = DB::table('uploadfile')->where('table', $this->actions['table'])->get();
+            $fields = DB::table('uploadfile')->where('table', $this->actions['table']['name'])->get();
             foreach($fields as $item) {
                 $key = $item->field; // 업로드 필드명
                 if (isset($row->$key)) {
@@ -651,7 +651,7 @@ class SiteBoardTable extends Component
             */
 
             // 데이터 삭제
-            DB::table($this->actions['table'])
+            DB::table($this->actions['table']['name'])
                 ->where('id', $this->actions['id'])
                 ->delete();
 

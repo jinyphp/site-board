@@ -25,7 +25,7 @@ class SiteBlogTable extends WireTablePopupForms
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_blogs";
+        $this->actions['table']['name'] = "site_blogs";
 
 
         $this->actions['view']['form'] = "jiny-site-board::site.board_code.form";

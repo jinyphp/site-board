@@ -152,9 +152,9 @@ class SiteForumWidget extends Component
 
         $table_prefix = "site_board";
         if($board) {
-            $this->actions['table'] = $table_prefix."_".$board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] = $table_prefix."_".$board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] = $table_prefix."_".$code; // 테이블명을 변경함
+            $this->actions['table']['name'] = $table_prefix."_".$code; // 테이블명을 변경함
 
             // 코드번호로 다시읽기
             $board = DB::table('site_board')->where('code',$code)->first();
@@ -244,7 +244,7 @@ class SiteForumWidget extends Component
     public function render()
     {
         ## 계시판 목록을 출력합니다.
-        $this->setTable($this->actions['table']);
+        $this->setTable($this->actions['table']['name']);
 
         // 2. 후킹_before :: 컨트롤러 메서드 호출
         // DB 데이터를 조회하는 방법들을 변경하려고 할때 유용합니다.
@@ -261,7 +261,7 @@ class SiteForumWidget extends Component
 
         // 3. DB에서 데이터를 읽어 옵니다.
         //$rows = $this->dataFetch($this->actions);
-        $db = DB::table($this->actions['table']);
+        $db = DB::table($this->actions['table']['name']);
         if($this->search_keyword) {
             $db->where('title', 'like', '%'.$this->search_keyword.'%');
         }
@@ -427,7 +427,7 @@ class SiteForumWidget extends Component
             // 5. 데이터 삽입
             if($form) {
                 //dd($form);
-                $id = DB::table($this->actions['table'])->insertGetId($form);
+                $id = DB::table($this->actions['table']['name'])->insertGetId($form);
                 $form['id'] = $id;
                 $this->last_id = $id;
 
@@ -470,13 +470,13 @@ class SiteForumWidget extends Component
         $this->popupForm = true;
         $this->mode = "view";
 
-        $row = DB::table($this->actions['table'])
+        $row = DB::table($this->actions['table']['name'])
             ->find($id);
         $this->setForm($row);
 
         // 계시물 조회수를 증가합니다.
         if($this->countable != $id) {
-            DB::table($this->actions['table'])
+            DB::table($this->actions['table']['name'])
                 ->where('id',$id)
                 ->increment('click');
 
@@ -518,7 +518,7 @@ class SiteForumWidget extends Component
             }
 
             if (isset($this->actions['id'])) {
-                $row = DB::table($this->actions['table'])->find($this->actions['id']);
+                $row = DB::table($this->actions['table']['name'])->find($this->actions['id']);
                 $this->setForm($row);
             }
 
@@ -568,7 +568,7 @@ class SiteForumWidget extends Component
     {
         if($this->permit['update']) {
             // step1. 수정전, 원본 데이터 읽기
-            $origin = DB::table($this->actions['table'])->find($this->actions['id']);
+            $origin = DB::table($this->actions['table']['name'])->find($this->actions['id']);
             foreach ($origin as $key => $value) {
                 $this->forms_old[$key] = $value;
             }
@@ -596,7 +596,7 @@ class SiteForumWidget extends Component
 
             // uploadfile 필드 조회
             /*
-            $fields = DB::table('uploadfile')->where('table', $this->actions['table'])->get();
+            $fields = DB::table('uploadfile')->where('table', $this->actions['table']['name'])->get();
             foreach($fields as $item) {
                 $key = $item->field; // 업로드 필드명
                 if($origin->$key != $this->forms[$key]) {
@@ -612,7 +612,7 @@ class SiteForumWidget extends Component
                 //dd($this->forms);
                 $this->forms['updated_at'] = date("Y-m-d H:i:s");
 
-                DB::table($this->actions['table'])
+                DB::table($this->actions['table']['name'])
                     ->where('id', $this->actions['id'])
                     ->update($this->forms);
             }
@@ -663,7 +663,7 @@ class SiteForumWidget extends Component
         $this->mode = null;
 
         if($this->permit['delete']) {
-            $row = DB::table($this->actions['table'])->find($this->actions['id']);
+            $row = DB::table($this->actions['table']['name'])->find($this->actions['id']);
             $form = [];
             foreach($row as $key => $value) {
                 $form[$key] = $value;
@@ -676,7 +676,7 @@ class SiteForumWidget extends Component
 
             // uploadfile 필드 조회
             /*
-            $fields = DB::table('uploadfile')->where('table', $this->actions['table'])->get();
+            $fields = DB::table('uploadfile')->where('table', $this->actions['table']['name'])->get();
             foreach($fields as $item) {
                 $key = $item->field; // 업로드 필드명
                 if (isset($row->$key)) {
@@ -686,7 +686,7 @@ class SiteForumWidget extends Component
             */
 
             // 데이터 삭제
-            DB::table($this->actions['table'])
+            DB::table($this->actions['table']['name'])
                 ->where('id', $this->actions['id'])
                 ->delete();
 

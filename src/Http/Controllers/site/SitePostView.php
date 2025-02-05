@@ -20,7 +20,7 @@ class SitePostView extends SiteController
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_posts";
+        $this->actions['table']['name'] = "site_posts";
 
         $this->actions['view']['form'] = "jiny-site-board::site.board_code.form";
 
@@ -42,9 +42,9 @@ class SitePostView extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -93,9 +93,9 @@ class SitePostView extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -119,7 +119,7 @@ class SitePostView extends SiteController
 
 
 
-        $row = DB::table($this->actions['table'])->where('id',$id)->first();
+        $row = DB::table($this->actions['table']['name'])->where('id',$id)->first();
 
         return view($this->actions['view']['detail'],[
             'actions' => $this->actions,
@@ -135,11 +135,11 @@ class SitePostView extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
         }
-        //$this->actions['table'] .= $code; // 테이블명을 변경함
+        //$this->actions['table']['name'] .= $code; // 테이블명을 변경함
 
         $id = $request->id;
 
@@ -147,7 +147,7 @@ class SitePostView extends SiteController
         // 2. 시간정보 생성
         $forms['updated_at'] = date("Y-m-d H:i:s");
 
-        DB::table($this->actions['table'])
+        DB::table($this->actions['table']['name'])
             ->where('id',$id)
             ->update($forms);
 
@@ -169,9 +169,9 @@ class SitePostView extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -183,7 +183,7 @@ class SitePostView extends SiteController
             $this->actions['board'][$key] = $value;
         }
 
-        $row = DB::table($this->actions['table'])->where('id',$id)->first();
+        $row = DB::table($this->actions['table']['name'])->where('id',$id)->first();
 
         return view($this->actions['view']['confirm'],[
             'actions' => $this->actions,
@@ -199,16 +199,16 @@ class SitePostView extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
         }
-        //$this->actions['table'] .= $code; // 테이블명을 변경함
+        //$this->actions['table']['name'] .= $code; // 테이블명을 변경함
 
         $id = $request->id;
 
         $forms = $request->forms;
-        DB::table($this->actions['table'])
+        DB::table($this->actions['table']['name'])
             ->where('id',$id)
             ->delete();
 

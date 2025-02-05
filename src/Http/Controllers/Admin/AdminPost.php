@@ -20,7 +20,7 @@ class AdminPost extends WireTablePopupForms
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_posts";
+        $this->actions['table']['name'] = "site_posts";
 
         $this->actions['view']['list'] = "jiny-site-board::admin.post.list";
         $this->actions['view']['form'] = "jiny-site-board::admin.post.form";

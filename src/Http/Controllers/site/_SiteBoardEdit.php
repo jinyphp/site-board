@@ -20,7 +20,7 @@ class SiteBoardCreate extends SiteController
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board_";
+        $this->actions['table']['name'] = "site_board_";
 
         //$this->actions['view']['list'] = "jiny-site-cms::site.board_code.list";
         $this->actions['view']['form'] = "jiny-site-board::site.board_code.form";
@@ -37,10 +37,10 @@ class SiteBoardCreate extends SiteController
     public function index(Request $request)
     {
         $code = $request->code;
-        $this->actions['table'] .= $code; // 테이블명을 변경함
+        $this->actions['table']['name'] .= $code; // 테이블명을 변경함
 
         $id = $request->id;
-        $row = DB::table($this->actions['table'])->where('id',$id)->first();
+        $row = DB::table($this->actions['table']['name'])->where('id',$id)->first();
 
         return view("jiny-site-board::site.board_code.create",[
             'actions' => $this->actions,
@@ -60,7 +60,7 @@ class SiteBoardCreate extends SiteController
     public function store(Request $request)
     {
         $code = $request->code;
-        $this->actions['table'] .= $code; // 테이블명을 변경함
+        $this->actions['table']['name'] .= $code; // 테이블명을 변경함
 
         $request->validate([
             'forms.title' => 'required|string|max:255',
@@ -70,7 +70,7 @@ class SiteBoardCreate extends SiteController
         $forms = $request->forms;
 
         // 데이터를 삽입합니다.
-        DB::table($this->actions['table'])->insert($forms);
+        DB::table($this->actions['table']['name'])->insert($forms);
 
         return response()->json([
             'forms' => $forms,

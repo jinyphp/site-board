@@ -23,7 +23,7 @@ class SiteBoardCreate extends SiteController
         $this->setVisit($this);
 
         ## 테이블 정보
-        $this->actions['table'] = "site_board_";
+        $this->actions['table']['name'] = "site_board_";
 
 
 
@@ -42,9 +42,9 @@ class SiteBoardCreate extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
             $board = DB::table('site_board')->where('code',$code)->first();
         }
 
@@ -89,11 +89,11 @@ class SiteBoardCreate extends SiteController
         // Slug로 코드 변경
         $board = DB::table('site_board')->where('slug',$code)->first();
         if($board) {
-            $this->actions['table'] .= $board->code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $board->code; // 테이블명을 변경함
         } else {
-            $this->actions['table'] .= $code; // 테이블명을 변경함
+            $this->actions['table']['name'] .= $code; // 테이블명을 변경함
         }
-        //$this->actions['table'] .= $code; // 테이블명을 변경함
+        //$this->actions['table']['name'] .= $code; // 테이블명을 변경함
 
         $request->validate([
             'forms.title' => 'required|string|max:255',
@@ -119,7 +119,7 @@ class SiteBoardCreate extends SiteController
         }
 
         // 데이터를 삽입합니다.
-        $id = DB::table($this->actions['table'])->insertGetId($forms);
+        $id = DB::table($this->actions['table']['name'])->insertGetId($forms);
 
         // 이미지 업로드 처리
         if ($request->hasFile('forms.image')) {
@@ -136,7 +136,7 @@ class SiteBoardCreate extends SiteController
                 $image->move($imagePath, $imageName);
 
                 // 이미지 경로를 데이터베이스에 저장
-                DB::table($this->actions['table'])
+                DB::table($this->actions['table']['name'])
                     ->where('id', $id)
                     ->update(['image' => "images/board/{$code}/{$id}/" . $imageName]);
 
